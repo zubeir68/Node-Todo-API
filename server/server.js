@@ -6,6 +6,7 @@ const { ObjectID } = require("mongodb"); //check
 const { mongoose } = require("./db/mongoose");
 const { Todo } = require("./models/todo");
 const { User } = require("./models/user");
+const { authenticate } = require('./middleware/authenticate');
 
 var app = express();
 const port = process.env.PORT || 3000;
@@ -111,10 +112,16 @@ app.patch('/todos/:id', (req, res) => {
 
 //GET /users
 
-app.get('/users', (req,res) => {
-  User.find().then(users => {
-    res.status(200).send({users});
-  }).catch(e => res.status(400).send(e));
+// app.get('/users', (req,res) => {
+//   User.find().then(users => {
+//     res.status(200).send({users});
+//   }).catch(e => res.status(400).send(e));
+// })
+
+
+
+app.get('/users/me', authenticate, (req, res) => {
+  res.send(req.user);
 })
 
 //POST /users
